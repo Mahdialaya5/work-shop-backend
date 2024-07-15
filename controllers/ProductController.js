@@ -30,6 +30,7 @@ exports.updateproduct=async(req,res)=>{
         console.log(error);
     }
 }
+
 exports.deleteproduct=async(req,res)=>{
     try {
         let result=await product.deleteOne({_id:req.params.id})
