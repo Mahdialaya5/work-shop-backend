@@ -68,10 +68,28 @@ exports.updateuser=async(req,res)=>{
 }
 
 exports.updatepassword=async(req,res)=>{
-   try {
 
-    
+    const {currentpassword,newpassword}=req.body
+   
+    try {
+        
+      const finduser= await user.findById(req.params.id)
+      const isMatched = await bcrypt.compare(currentpassword,finduser.password)
+     if(isMatched)
+    {   if(currentpassword==newpassword){
+        return res.status(400).send({msg:"password already exist "})
+    } 
+    else  {
+         const  hash_newpassword = await bcrypt.hash(newpassword,10)
+         const updatenewpassword = await user.findByIdAndUpdate(req.params.id,{password:hash_newpassword},{ new: true })
+        return    res.status(200).send(updatenewpassword)
+        }
+      
+}
+  else return res.status(400).send("bad current password")
+
    } catch (error) {
     console.log(error);
    }
 }
+

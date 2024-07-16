@@ -8,7 +8,7 @@ const RoutesProduct=require('./Routes/RoutesProduct')
 connectdb()
 
 app.use(express.json())
-
+app.use("/uploads",express.static(__dirname+"/uploads"))
 
 //Routes
 app.use('/api/user',RoutesUser)
