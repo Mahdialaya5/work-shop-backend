@@ -4,7 +4,7 @@ const product = require("../models/Product");
 exports.addproduct = async (req, res) => {
     
     try {
-        const newProduct = new product({name:req.body.name,description:req.body.description,price:req.body.price});
+        const newProduct = new product(req.body);
         const url = `${req.protocol}://${req.get("host")}/${req.file.path}`
              newProduct.img=url
         await newProduct.save();
@@ -17,7 +17,7 @@ exports.addproduct = async (req, res) => {
 
 exports.getproducts=async(req,res)=>{
     try {
-      let getproducts= await product.find()
+      let getproducts= await product.find().populate("seller")
         return res.status(200).send(getproducts)
     } catch (error) {
         console.log(error);
@@ -49,5 +49,20 @@ exports.deleteproduct=async(req,res)=>{
     } catch (error) {
         console.log(error);
         
+    }
+}
+
+exports.getproductbycategory=async(req,res)=>{
+   
+    console.log(req.query);
+    try {
+         const getProductbycategory= await product.find({category:req.query.category})
+       
+         if (getProductbycategory) {
+              return res.status(200).send(getProductbycategory)
+         }
+         else  return res.status(400).send({msg:"no products"}) 
+    } catch (error) {
+        console.log(error);
     }
 }
